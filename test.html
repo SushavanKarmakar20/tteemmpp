@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Team Bookmarks</title>
+  <!-- Materialize CSS -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/css/materialize.min.css" rel="stylesheet">
+  <!-- Google Icons -->
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <!-- Custom Style -->
+  <style>
+    * {
+      font-family: 'Poppins', sans-serif;
+    }
+    
+    body {
+      background: #ffffff;
+      min-height: 100vh;
+    }
+    
+    nav {
+      background-color: #78be20; /* ASDA Green */
+      box-shadow: 0 2px 10px rgba(120, 190, 32, 0.15);
+      height: 70px;
+      line-height: 70px;
+    }
+    
+    /* Logo styling */
+    .brand-logo {
+      display: flex !important;
+      align-items: center;
+      padding-left: 30px !important;
+      line-height: 70px !important;
+    }
+    
+    .brand-logo img {
+      height: 45px;
+      margin-right: 15px;
+      border-radius: 10px;
+      background: white;
+      padding: 5px;
+      transition: transform 0.4s ease;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    }
+    
+    .brand-logo img:hover {
+      transform: scale(1.1);
+    }
+    
+    .brand-logo span {
+      font-weight: 600;
+      font-size: 1.4rem;
+      letter-spacing: 0.5px;
+    }
+    
+    /* Navbar tabs centered */
+    .nav-tabs {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 5px;
+    }
+    
+    .nav-tabs a {
+      color: white !important;
+      padding: 0 20px;
+      height: 70px;
+      line-height: 70px;
+      border-radius: 0;
+      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
+      font-weight: 500;
+      letter-spacing: 0.3px;
+    }
+    
+    .nav-tabs a:hover {
+      background-color: rgba(255,255,255,0.15);
+    }
+    
+    .nav-tabs a.active {
+      background-color: rgba(255,255,255,0.25);
+      font-weight: 600;
+    }
+    
+    .nav-tabs a::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 0;
+      height: 3px;
+      background-color: white;
+      transition: width 0.3s ease;
+    }
+    
+    .nav-tabs a.active::after {
+      width: 80%;
+    }
+    
+    .nav-tabs a i {
+      font-size: 1.2rem;
+      vertical-align: middle;
+    }
+    
+    .container {
+      margin-top: 40px;
+      max-width: 1280px;
+    }
+    
+    /* Search bar styling */
+    .search-wrapper {
+      margin: 30px 0 40px 0;
+      display: flex;
+      justify-content: center;
+    }
+    
+    .search-box {
+      background: white;
+      border: 2px solid #e8e8e8;
+      border-radius: 50px;
+      padding: 5px 25px;
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      align-items: center;
+      transition: all 0.3s ease;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+    }
+    
+    .search-box:focus-within {
+      border-color: #78be20;
+      box-shadow: 0 4px 20px rgba(120, 190, 32, 0.15);
+    }
+    
+    .search-box input {
+      border: none !important;
+      outline: none !important;
+      box-shadow: none !important;
+      margin: 0 !important;
+      height: 45px !important;
+      font-size: 15px;
+      color: #333;
+    }
+    
+    .search-box input::placeholder {
+      color: #999;
+    }
+    
+    .search-box i {
+      color: #78be20;
+      margin-right: 10px;
+    }
+    
+    /* Enhanced card styling */
+    .bookmark-card {
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      border-radius: 16px;
+      overflow: hidden;
+      background: white;
+      position: relative;
+      border: 1px solid #e8e8e8;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    }
+    
+    .bookmark-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 4px;
+      background: #78be20;
+      transform: scaleX(0);
+      transition: transform 0.3s ease;
+    }
+    
+    .bookmark-card:hover::before {
+      transform: scaleX(1);
+    }
+    
+    .bookmark-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 12px 30px rgba(120, 190, 32, 0.2);
+      border-color: #78be20;
+    }
+    
+    .card-content {
+      padding: 24px !important;
+      min-height: 120px;
+    }
+    
+    .card-title {
+      font-size: 1.15rem !important;
+      font-weight: 600 !important;
+      color: #2c3e50 !important;
+      margin-bottom: 8px !important;
+      letter-spacing: 0.2px;
+    }
+    
+    .card-title i {
+      color: #78be20;
+      transition: transform 0.3s ease;
+      font-size: 1.3rem;
+    }
+    
+    .bookmark-card:hover .card-title i {
+      transform: scale(1.15);
+    }
+    
+    .card-description {
+      color: #6c757d;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      font-weight: 300;
+    }
+    
+    .card-category {
+      display: inline-block;
+      background: #78be20;
+      color: white;
+      padding: 4px 12px;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      margin-top: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    
+    .card-action {
+      background-color: #f8f9fa !important;
+      border-top: 1px solid #e8e8e8 !important;
+      padding: 16px 24px !important;
+    }
+    
+    .card-action a {
+      color: #78be20 !important;
+      font-weight: 600;
+      transition: all 0.3s ease;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+      letter-spacing: 0.5px;
+      display: inline-flex;
+      align-items: center;
+    }
+    
+    .card-action a:hover {
+      color: #5a9016 !important;
+      padding-left: 8px;
+    }
+    
+    .card-action a i {
+      margin-right: 5px;
+      font-size: 1rem;
+    }
+    
+    .category-section {
+      margin-top: 20px;
+      animation: fadeIn 0.5s ease-in-out;
+    }
+    
+    @keyframes fadeIn {
+      from {
+        opacity: 0;
+        transform: translateY(15px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    
+    /* Section headers */
+    .section-header {
+      text-align: center;
+      margin-bottom: 30px;
+      padding-bottom: 15px;
+      position: relative;
+    }
+    
+    .section-header h4 {
+      color: #2c3e50;
+      font-weight: 600;
+      font-size: 1.8rem;
+      margin: 0;
+      letter-spacing: 0.5px;
+    }
+    
+    .section-header::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 60px;
+      height: 3px;
+      background: #78be20;
+      border-radius: 2px;
+    }
+    
+    /* Mobile responsive */
+    @media only screen and (max-width: 992px) {
+      .nav-tabs {
+        position: static;
+        transform: none;
+        justify-content: center;
+        margin-top: 0;
+        flex-wrap: wrap;
+        background: #78be20;
+        padding: 10px;
+      }
+      
+      .nav-tabs a {
+        padding: 0 12px;
+        font-size: 0.85rem;
+      }
+      
+      .brand-logo {
+        position: relative !important;
+        padding-left: 15px !important;
+      }
+      
+      .brand-logo span {
+        font-size: 1.1rem;
+      }
+    }
+    
+    /* Smooth scroll */
+    html {
+      scroll-behavior: smooth;
+    }
+    
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 10px;
+    }
+    
+    ::-webkit-scrollbar-track {
+      background: #f1f1f1;
+    }
+    
+    ::-webkit-scrollbar-thumb {
+      background: #78be20;
+      border-radius: 5px;
+    }
+    
+    ::-webkit-scrollbar-thumb:hover {
+      background: #5a9016;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav>
+    <div class="nav-wrapper">
+      <!-- Logo on the left -->
+      <a href="#" class="brand-logo">
+        <img src="https://cdn-icons-png.flaticon.com/512/2965/2965358.png" alt="Logo">
+        <span class="hide-on-small-only">Team Bookmarks</span>
+      </a>
+      
+      <!-- Category tabs in the middle -->
+      <div class="nav-tabs hide-on-med-and-down">
+        <a href="#all" class="nav-tab-link active" data-target="all">
+          <i class="material-icons left">apps</i>All
+        </a>
+        <a href="#servicenow" class="nav-tab-link" data-target="servicenow">
+          <i class="material-icons left">cloud</i>ServiceNow
+        </a>
+        <a href="#azure" class="nav-tab-link" data-target="azure">
+          <i class="material-icons left">cloud_queue</i>Azure
+        </a>
+        <a href="#github" class="nav-tab-link" data-target="github">
+          <i class="material-icons left">code</i>GitHub
+        </a>
+        <a href="#others" class="nav-tab-link" data-target="others">
+          <i class="material-icons left">more_horiz</i>Others
+        </a>
+      </div>
+    </div>
+    
+    <!-- Mobile tabs -->
+    <div class="nav-tabs hide-on-large-only" style="position: static; transform: none;">
+      <a href="#all" class="nav-tab-link active" data-target="all">All</a>
+      <a href="#servicenow" class="nav-tab-link" data-target="servicenow">ServiceNow</a>
+      <a href="#azure" class="nav-tab-link" data-target="azure">Azure</a>
+      <a href="#github" class="nav-tab-link" data-target="github">GitHub</a>
+      <a href="#others" class="nav-tab-link" data-target="others">Others</a>
+    </div>
+  </nav>
+
+  <div class="container">
+    <!-- Search Bar -->
+    <div class="search-wrapper">
+      <div class="search-box">
+        <i class="material-icons">search</i>
+        <input type="text" id="searchInput" placeholder="Search bookmarks..." onkeyup="searchBookmarks()">
+      </div>
+    </div>
+
+    <!-- All Bookmarks -->
+    <div id="all" class="col s12 category-section active-section">
+      <div class="section-header">
+        <h4>All Bookmarks</h4>
+      </div>
+      <div class="row" id="all-links"></div>
+    </div>
+
+    <!-- ServiceNow -->
+    <div id="servicenow" class="col s12 category-section" style="display:none;">
+      <div class="section-header">
+        <h4>ServiceNow Resources</h4>
+      </div>
+      <div class="row" id="servicenow-links"></div>
+    </div>
+
+    <!-- Azure -->
+    <div id="azure" class="col s12 category-section" style="display:none;">
+      <div class="section-header">
+        <h4>Azure Resources</h4>
+      </div>
+      <div class="row" id="azure-links"></div>
+    </div>
+
+    <!-- GitHub -->
+    <div id="github" class="col s12 category-section" style="display:none;">
+      <div class="section-header">
+        <h4>GitHub Resources</h4>
+      </div>
+      <div class="row" id="github-links"></div>
+    </div>
+
+    <!-- Others -->
+    <div id="others" class="col s12 category-section" style="display:none;">
+      <div class="section-header">
+        <h4>Other Resources</h4>
+      </div>
+      <div class="row" id="others-links"></div>
+    </div>
+  </div>
+
+  <!-- Materialize JS -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/materialize/1.0.0/js/materialize.min.js"></script>
+
+  <!-- Custom JS -->
+  <script>
+    const bookmarks = {
+      "ServiceNow": [
+        { title: "ServiceNow Portal", url: "https://servicenow.com", description: "Main ServiceNow platform for IT service management" },
+        { title: "ServiceNow Docs", url: "https://developer.servicenow.com/", description: "Comprehensive developer documentation and guides" }
+      ],
+      "Azure": [
+        { title: "Azure Portal", url: "https://portal.azure.com", description: "Microsoft Azure cloud computing portal" },
+        { title: "Azure DevOps", url: "https://dev.azure.com", description: "Complete DevOps platform for CI/CD pipelines" },
+        { title: "Azure Docs", url: "https://learn.microsoft.com/en-us/azure/", description: "Official Microsoft Azure documentation" }
+      ],
+      "GitHub": [
+        { title: "GitHub", url: "https://github.com", description: "World's leading code repository and collaboration platform" },
+        { title: "GitHub Docs", url: "https://docs.github.com", description: "Complete GitHub documentation and tutorials" }
+      ],
+      "Others": [
+        { title: "Stack Overflow", url: "https://stackoverflow.com", description: "Largest developer community for Q&A" },
+        { title: "MDN Web Docs", url: "https://developer.mozilla.org", description: "Comprehensive web development documentation" },
+        { title: "ChatGPT", url: "https://chat.openai.com", description: "AI-powered assistant for development help" }
+      ]
+    };
+
+    function renderBookmarks(category, containerId, showCategory = false) {
+      const container = document.getElementById(containerId);
+      container.innerHTML = '';
+      
+      if (category === "All") {
+        // Render all bookmarks from all categories
+        let index = 0;
+        Object.keys(bookmarks).forEach(cat => {
+          bookmarks[cat].forEach(link => {
+            const card = createBookmarkCard(link, cat, index, true);
+            container.appendChild(card);
+            index++;
+          });
+        });
+      } else {
+        // Render specific category
+        bookmarks[category].forEach((link, index) => {
+          const card = createBookmarkCard(link, category, index, showCategory);
+          container.appendChild(card);
+        });
+      }
+    }
+
+    function createBookmarkCard(link, category, index, showCategory) {
+      const card = document.createElement('div');
+      card.className = "col s12 m6 l4";
+      card.style.animationDelay = `${index * 0.05}s`;
+      card.innerHTML = `
+        <div class="card hoverable bookmark-card">
+          <div class="card-content">
+            <span class="card-title">
+              <i class="material-icons left">bookmark</i>${link.title}
+            </span>
+            <p class="card-description">${link.description}</p>
+            ${showCategory ? `<span class="card-category">${category}</span>` : ''}
+          </div>
+          <div class="card-action">
+            <a href="${link.url}" target="_blank">
+              <i class="material-icons">open_in_new</i>Open Link
+            </a>
+          </div>
+        </div>
+      `;
+      return card;
+    }
+
+    // Initialize all bookmarks
+    renderBookmarks("All", "all-links", true);
+    renderBookmarks("ServiceNow", "servicenow-links");
+    renderBookmarks("Azure", "azure-links");
+    renderBookmarks("GitHub", "github-links");
+    renderBookmarks("Others", "others-links");
+
+    // Tab switching functionality
+    document.querySelectorAll('.nav-tab-link').forEach(link => {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        
+        // Remove active class from all links
+        document.querySelectorAll('.nav-tab-link').forEach(l => l.classList.remove('active'));
+        
+        // Add active class to clicked link
+        this.classList.add('active');
+        
+        // Hide all sections
+        document.querySelectorAll('.category-section').forEach(section => {
+          section.style.display = 'none';
+        });
+        
+        // Show selected section with animation
+        const target = this.getAttribute('data-target');
+        const targetSection = document.getElementById(target);
+        targetSection.style.display = 'block';
+        
+        // Scroll to top smoothly
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      });
+    });
+
+    // Search functionality
+    function searchBookmarks() {
+      const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+      
+      document.querySelectorAll('.bookmark-card').forEach(card => {
+        const title = card.querySelector('.card-title').textContent.toLowerCase();
+        const description = card.querySelector('.card-description').textContent.toLowerCase();
+        const category = card.querySelector('.card-category') ? 
+                        card.querySelector('.card-category').textContent.toLowerCase() : '';
+        
+        if (title.includes(searchTerm) || description.includes(searchTerm) || category.includes(searchTerm)) {
+          card.parentElement.style.display = 'block';
+          
+          if (searchTerm) {
+            card.style.borderColor = '#78be20';
+            card.style.borderWidth = '2px';
+          } else {
+            card.style.borderColor = '#e8e8e8';
+            card.style.borderWidth = '1px';
+          }
+        } else {
+          card.parentElement.style.display = 'none';
+        }
+      });
+    }
+
+    // Toast notifications
+    document.addEventListener('click', function(e) {
+      if (e.target.closest('.card-action a')) {
+        M.toast({
+          html: '<i class="material-icons left">open_in_new</i>Opening link...',
+          classes: 'rounded',
+          style: 'background-color: #78be20;'
+        });
+      }
+    });
+  </script>
+</body>
+</html>
